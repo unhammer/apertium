@@ -161,7 +161,7 @@ FileMorphoStream::lrlmClassify(UString const &str, int &ivwords)
   {
     if(str[i] != '<')
     {
-      if(str[i] == '+')
+      if(str[i] == '+' && false)
       {
         int val = ms.classifyFinals(me->getFinals());
         if(val != -1)

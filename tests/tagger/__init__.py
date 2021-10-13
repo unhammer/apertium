@@ -334,7 +334,6 @@ class AmbiguityClassTest(unittest.TestCase):
             "'cat' must be output and tagged as an adjective or a noun.\n" +
             "Actual output:\n{}".format(subst_stdout))
 
-    @unittest.expectedFailure
     def test_g_vs_plus(self):
         inp = tmp("""
 ^TV-karriere/TV<np><al><cmp>+karriere<n><m><sg><ind>/Tv<n><m><sg><ind><cmp>+karriere<n><m><sg><ind>$
