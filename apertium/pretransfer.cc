@@ -70,7 +70,9 @@ void readAndWriteUntil(InputFile& input, UFILE* output, int const charcode)
 void procWord(InputFile& input, UFILE* output, bool surface_forms, bool compound_sep, UString wblank = ""_u)
 {
   int mychar;
+  UString pre_buffer;
   UString buffer;
+  UString form;
 
   bool buffer_mode = false;
   bool in_tag = false;
@@ -79,6 +81,11 @@ void procWord(InputFile& input, UFILE* output, bool surface_forms, bool compound
   if(surface_forms)
   {
     while((mychar = input.get()) != '/') ;
+  }
+  else {
+    while ((mychar = input.get()) != '/') {
+      form += mychar;
+    }
   }
 
   while((mychar = input.get()) != '$')
@@ -124,6 +131,8 @@ void procWord(InputFile& input, UFILE* output, bool surface_forms, bool compound
         buffer.append("$ "_u);
         buffer.append(wblank);
         buffer.append("^"_u);
+        pre_buffer.append(buffer);
+        buffer.clear();
       }
       else if(in_tag == false && mychar == '~' and compound_sep == true)
       {
@@ -143,12 +152,12 @@ void procWord(InputFile& input, UFILE* output, bool surface_forms, bool compound
       }
       else
       {
-        u_fputc(mychar, output);
+        buffer += mychar;
       }
     }
 
   }
-  write(buffer, output);
+  write(pre_buffer + form + "/"_u + buffer, output);
 }
 
 void processStream(InputFile& input, UFILE* output, bool null_flush, bool surface_forms, bool compound_sep)
