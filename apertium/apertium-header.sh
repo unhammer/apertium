@@ -307,6 +307,16 @@ translate_docx () {
     run_mode_wblank | \
     apertium-rewxml|\
   awk '{punto = index($0, "/>") + 3; cabeza = substr($0, 1, punto-1); cola = substr($0, punto); n1 = substr(cabeza, index(cabeza, "\"")+1); name = substr(n1, 1, index(n1, "\"")-1); gsub("[?]> ", "?>\n", cola); print cola > name;}'
+  SETTINGS_FILE="$INPUT_TMPDIR/word/settings.xml"
+  if [[ -f "$SETTINGS_FILE" ]]; then
+    if grep -q "<w:updateFields" "$SETTINGS_FILE"; then
+      sed -i.bak 's/<w:updateFields[^>]*\/>/<w:updateFields w:val="true"\/>/g' "$SETTINGS_FILE"
+      rm -f "${SETTINGS_FILE}.bak"
+    else
+      sed -i.bak 's/<\/w:settings>/<w:updateFields w:val="true"\/><\/w:settings>/' "$SETTINGS_FILE"
+      rm -f "${SETTINGS_FILE}.bak"
+    fi
+  fi
   VUELVE=$(pwd)
   cd "$INPUT_TMPDIR"
   zip -q -r - . >"$TMP_OUT_FILE"
